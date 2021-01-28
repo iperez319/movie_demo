@@ -6,26 +6,10 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
 import NavBar from "../components/NavBar";
+import theme from '../theme';
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
-
-  const theme = createMuiTheme({
-        palette: {
-            primary: {
-                main: '#556cd6',
-            },
-            secondary: {
-                main: '#19857b',
-            },
-            error: {
-                main: red.A400,
-            },
-            background: {
-                default: '#fff',
-            },
-        },
-    });
 
     React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -37,16 +21,16 @@ export default function MyApp(props) {
 
   return (
       <React.Fragment>
-        <Head>
-          <title>My page</title>
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-        </Head>
-        <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <NavBar/>
-          <Component {...pageProps} />
-        </ThemeProvider>
+          <Head>
+              <title>My page</title>
+              <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width"/>
+          </Head>
+          <ThemeProvider theme={theme}>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline/>
+              <NavBar/>
+              <Component {...pageProps} />
+          </ThemeProvider>
       </React.Fragment>
   );
 }

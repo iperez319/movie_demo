@@ -1,0 +1,15 @@
+.posterList {
+    display: flex;
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
+.poster{
+    /*margin-right: 10px;*/
+    height: 225px;
+    border-radius: 5px;
+}
+
+.container {
+    padding: 10px;
+}

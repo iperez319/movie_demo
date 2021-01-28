@@ -1,15 +1,36 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import {Button, Container} from "@material-ui/core";
-import NavBar from "../components/NavBar";
+import classes from '../styles/PosterList.module.css'
+import {Button, ButtonBase, Container, Typography} from "@material-ui/core";
+import Image from 'next/image';
+import axios from 'axios';
+import PosterList from "../components/PosterList";
 
-export default function Home() {
+export async function getServerSideProps(context){
+    const base = 'https://api.themoviedb.org/3';
+    const popularPromise = axios.get(base + "/tv/popular", {params: {api_key: process.env.API_KEY}})
+    const topRatedPromise = axios.get(base + "/tv/top_rated", {params: {api_key: process.env.API_KEY}})
+    const [popularShows, topRatedShows] = await Promise.all([popularPromise, topRatedPromise]);
+    return {
+        props: {
+            popularShows: popularShows.data,
+            topRatedShows: topRatedShows.data,
+        }
+    }
+}
+
+export default function Home(props) {
+    const image_path = 'https://image.tmdb.org/t/p/w220_and_h330_face/'
+    let popularShows = props?.popularShows?.results ?? [];
+    let topRatedShows = props?.topRatedShows?.results ?? [];
   return (
     <div>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+        <Container className={classes.container}>
+            <PosterList title={"Popular Shows"} shows={popularShows}/>
+        </Container>
     </div>
   )
 }
