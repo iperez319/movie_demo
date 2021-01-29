@@ -3,6 +3,7 @@ import {useRouter} from 'next/router';
 import axios from "axios";
 import {Chip, Container, makeStyles, Paper, Typography} from "@material-ui/core";
 import PosterList from "../components/PosterList";
+import ProviderList from "../components/ProviderList";
 
 export async function getServerSideProps(context){
     const {id} = context.params;
@@ -10,8 +11,9 @@ export async function getServerSideProps(context){
     const showDetailsPromise = axios.get(base + `/tv/${id}`, {params: {api_key: process.env.API_KEY}});
     const creditsPromise = axios.get(base + `/tv/${id}/credits`, {params: {api_key: process.env.API_KEY}});
     const similarShowsPromise = axios.get(base + `/tv/${id}/similar`, {params: {api_key: process.env.API_KEY}});
+    const streamPromise = axios.get(base + `/tv/${id}/watch/providers`, {params: {api_key: process.env.API_KEY}});
 
-    const [showDetails, credits, similarShows] = await Promise.all([showDetailsPromise, creditsPromise, similarShowsPromise]);
+    const [showDetails, credits, similarShows, streamLocations] = await Promise.all([showDetailsPromise, creditsPromise, similarShowsPromise, streamPromise]);
 
     const cast = credits.data.cast.filter(c => c.known_for_department == "Acting" && c.profile_path)
 
@@ -20,6 +22,7 @@ export async function getServerSideProps(context){
             showDetails: showDetails.data,
             cast,
             similarShows: similarShows.data,
+            streamLocations: streamLocations?.data?.results?.US,
         }
     }
 }
@@ -42,12 +45,12 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function ShowDetail({showDetails, cast, similarShows}){
+export default function ShowDetail({showDetails, cast, similarShows, streamLocations}){
     const classes = useStyles();
     const base_poster_path = 'https://image.tmdb.org/t/p/w342';
     const base_profile_path = 'https://image.tmdb.org/t/p/w138_and_h175_face'
 
-    console.log(cast);
+    console.log(streamLocations);
     return (
         <Container style={{marginTop: '20px', paddingBottom: '40px'}}>
             <div style={{display: 'flex', alignItems: 'center'}} className={classes.infoContainer}>
@@ -64,6 +67,9 @@ export default function ShowDetail({showDetails, cast, similarShows}){
                                 style={{fontStyle: 'italic', marginTop: '10px'}}>{showDetails.tagline}</Typography>
                     <Typography variant={'h6'} style={{marginTop: '10px'}}>Overview</Typography>
                     <Typography variant={'body1'}>{showDetails.overview}</Typography>
+
+                    <ProviderList providers={streamLocations?.flatrate} title={"Stream"}/>
+                    <ProviderList providers={streamLocations?.buy} title={'Buy'}/>
 
                     <Typography variant={'body1'} style={{
                         fontWeight: 'bold',

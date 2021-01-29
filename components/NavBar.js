@@ -23,11 +23,11 @@ export default function NavBar(){
                 <Toolbar>
                     <ButtonBase as={Link} href={"/"} style={{padding: '10px'}}>
                         <Typography variant="h6">
-                        News
+                        TV Show Demo
                         </Typography>
                     </ButtonBase>
                     <div className={classes.title}></div>
-                    <Button color="inherit">TV Show Demo</Button>
+                    <Button color="inherit">My Favorites</Button>
                 </Toolbar>
             </AppBar>
         </div>
