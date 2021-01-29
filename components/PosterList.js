@@ -1,20 +1,19 @@
 import React from 'react';
-import {ButtonBase, Container, Typography} from "@material-ui/core";
+import {ButtonBase, Container, IconButton, Typography} from "@material-ui/core";
 import classes from "../styles/PosterList.module.css";
+import Link from 'next/link';
+import {Favorite} from "@material-ui/icons";
+import Poster from "./Poster";
 
 export default function PosterList({title, shows}) {
-    const image_path = 'https://image.tmdb.org/t/p/w220_and_h330_face/'
     return (
-        <>
+        <div style={{marginTop: '20px'}}>
             <Typography variant={'h4'}>{title}</Typography>
             <div className={classes.posterList}>
                 {
-                    shows.map((item, index) => <ButtonBase onClick={() => alert("HI")}
-                                                                   style={{marginRight: '10px'}}><img
-                        src={image_path + item.poster_path} className={classes.poster}
-                        key={`popular-${index}`}/></ButtonBase>)
+                    shows.map((item) => <Poster show={item}/>)
                 }
             </div>
-        </>
+        </div>
     )
 }
