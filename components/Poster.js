@@ -1,17 +1,44 @@
 import React, {useEffect, useState} from 'react';
 import Link from "next/link";
-import classes from "../styles/Poster.module.css";
-import {ButtonBase, IconButton} from "@material-ui/core";
+import {ButtonBase, IconButton, makeStyles} from "@material-ui/core";
 import {Favorite} from "@material-ui/icons";
+
+const useStyles = makeStyles(theme => ({
+    buttonBaseContainer: {
+        marginRight: '15px',
+        position: 'relative',
+    },
+    posterImage: {
+        height: '225px',
+        borderRadius: '5px',
+        [theme.breakpoints.down('sm')]:{
+            height: '175px',
+        }
+    },
+    favoriteButton: {
+        position: 'absolute',
+        top: '0',
+        right: '0',
+    },
+    ratingsContainer: {
+        position: 'absolute',
+        top: '15px',
+        left: '5px',
+        padding: '0px 10px',
+        backgroundColor: 'rgba(72, 72, 72, 0.6)',
+        borderRadius: '10px',
+        fontWeight: 'bold',
+    }
+}))
 
 export default function Poster({show}){
     const [isFavorite, setIsFavorite] = useState(false);
+    const classes = useStyles();
     const image_path = 'https://image.tmdb.org/t/p/w220_and_h330_face/'
     const handleClick = (evt) => {
         evt.preventDefault();
         let storedData = localStorage.getItem('favoriteShows') ?? '[]';
         let parsedData = JSON.parse(storedData);
-        console.log(parsedData);
         if(isFavorite){
             //Remove from store
             let newItems = parsedData.filter(item => item.id != show.id);

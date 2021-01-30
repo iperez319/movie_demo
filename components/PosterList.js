@@ -1,14 +1,31 @@
 import React from 'react';
-import {ButtonBase, Container, IconButton, Typography} from "@material-ui/core";
-import classes from "../styles/PosterList.module.css";
+import {ButtonBase, Container, IconButton, makeStyles, Typography} from "@material-ui/core";
 import Link from 'next/link';
 import {Favorite} from "@material-ui/icons";
 import Poster from "./Poster";
 
+const useStyles = makeStyles(theme => ({
+    posterList: {
+        display: 'flex',
+        overflowY: 'auto',
+        marginTop: '20px',
+    },
+    container: {
+        padding: '10px',
+    },
+    title: {
+        marginBottom: '-10px',
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '27px'
+        }
+    }
+}))
+
 export default function PosterList({title, shows}) {
+    const classes = useStyles();
     return (
         <div style={{marginTop: '20px'}}>
-            <Typography variant={'h4'}>{title}</Typography>
+            <Typography variant={'h4'} className={classes.title}>{title}</Typography>
             <div className={classes.posterList}>
                 {
                     shows.map((item) => <Poster show={item}/>)
