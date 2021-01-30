@@ -22,7 +22,7 @@ export async function getServerSideProps(context){
             showDetails: showDetails.data,
             cast,
             similarShows: similarShows.data,
-            streamLocations: streamLocations?.data?.results?.US,
+            streamLocations: streamLocations?.data?.results?.US ?? {},
         }
     }
 }
@@ -42,6 +42,11 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
         }
+    },
+    castTitle: {
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '27px',
+        }
     }
 }))
 
@@ -50,14 +55,32 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
     const base_poster_path = 'https://image.tmdb.org/t/p/w342';
     const base_profile_path = 'https://image.tmdb.org/t/p/w138_and_h175_face'
 
-    console.log(streamLocations);
+    const CastList = () => {
+        return (<div style={{marginTop: '20px'}}>
+            <Typography variant={'h4'} className={classes.castTitle}>Cast</Typography>
+            <div style={{display: 'flex', overflowY: 'auto', marginTop: '10px'}}>
+                {
+                    cast.map(item => (
+                        <Paper style={{width: 'min-content', marginRight: '30px'}}>
+                            <img src={base_profile_path + item.profile_path} style={{borderTopLeftRadius: '4px', borderTopRightRadius: '4px'}}/>
+                            <div style={{padding: '10px'}}>
+                                <Typography variant={'body1'}
+                                            style={{fontWeight: 'bold'}}>{item.name}</Typography>
+                                <Typography variant={'body1'}>{item.character}</Typography>
+                            </div>
+                        </Paper>
+                    ))
+                }
+            </div>
+        </div>)
+    }
+
     return (
         <Container style={{marginTop: '20px', paddingBottom: '40px'}}>
             <div style={{display: 'flex', alignItems: 'center'}} className={classes.infoContainer}>
                 <img src={base_poster_path + showDetails.poster_path} className={classes.posterImage}/>
                 <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
-                    <Typography
-                        variant={'h3'}>{showDetails.name}{showDetails.first_air_date ? ' (' + (new Date(showDetails.first_air_date)).getFullYear().toString() + ')' : ''}</Typography>
+                    <Typography variant={'h3'} as={'p'}>{showDetails.name}{showDetails.first_air_date ? ' (' + (new Date(showDetails.first_air_date)).getFullYear().toString() + ')' : ''}</Typography>
                     <div style={{overflow: 'auto'}}>
                         {
                             showDetails.genres.map(item => <Chip label={item.name} className={classes.chips} color={'primary'}/>)
@@ -78,23 +101,7 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
                     {showDetails.created_by ? <Typography variant={'body1'}>Creator</Typography> : null}
                 </div>
             </div>
-            <div style={{marginTop: '20px'}}>
-                <Typography variant={'h4'}>Cast</Typography>
-                <div style={{display: 'flex', overflowY: 'auto', marginTop: '10px'}}>
-                    {
-                        cast.map(item => (
-                            <Paper style={{width: 'min-content', marginRight: '30px'}}>
-                                <img src={base_profile_path + item.profile_path} style={{borderTopLeftRadius: '4px', borderTopRightRadius: '4px'}}/>
-                                <div style={{padding: '10px'}}>
-                                    <Typography variant={'body1'}
-                                               style={{fontWeight: 'bold'}}>{item.name}</Typography>
-                                    <Typography variant={'body1'}>{item.character}</Typography>
-                                </div>
-                            </Paper>
-                        ))
-                    }
-                </div>
-            </div>
+            <CastList/>
             <PosterList shows={similarShows.results ?? []} title={'Similar Shows'}/>
         </Container>
     );
