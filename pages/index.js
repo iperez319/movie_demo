@@ -5,7 +5,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import PosterList from "../components/PosterList";
 
-export async function getServerSideProps(context){
+export async function getStaticProps(context){
     const base = 'https://api.themoviedb.org/3';
     const popularPromise = axios.get(base + "/tv/popular", {params: {api_key: process.env.API_KEY}})
     const topRatedPromise = axios.get(base + "/tv/top_rated", {params: {api_key: process.env.API_KEY}})
@@ -14,7 +14,8 @@ export async function getServerSideProps(context){
         props: {
             popularShows: popularShows.data,
             topRatedShows: topRatedShows.data,
-        }
+        },
+        revalidate: 450,
     }
 }
 

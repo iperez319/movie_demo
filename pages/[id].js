@@ -2,10 +2,11 @@ import React from 'react';
 import {useRouter} from 'next/router';
 import axios from "axios";
 import {Chip, Container, makeStyles, Paper, Typography} from "@material-ui/core";
+import {Skeleton} from "@material-ui/lab"
 import PosterList from "../components/PosterList";
 import ProviderList from "../components/ProviderList";
 
-export async function getServerSideProps(context){
+export async function getStaticProps(context){
     const {id} = context.params;
     const base = 'https://api.themoviedb.org/3';
     const showDetailsPromise = axios.get(base + `/tv/${id}`, {params: {api_key: process.env.API_KEY}});
@@ -23,7 +24,21 @@ export async function getServerSideProps(context){
             cast,
             similarShows: similarShows.data,
             streamLocations: streamLocations?.data?.results?.US ?? {},
-        }
+        },
+        revalidate: 60,
+    }
+}
+
+export async function getStaticPaths(){
+    const base = 'https://api.themoviedb.org/3';
+    const popularPromise = axios.get(base + "/tv/popular", {params: {api_key: process.env.API_KEY}})
+    const topRatedPromise = axios.get(base + "/tv/top_rated", {params: {api_key: process.env.API_KEY}})
+    const [popularShows, topRatedShows] = await Promise.all([popularPromise, topRatedPromise]);
+    const popularIds = popularShows?.data?.results?.map(item => ({params: {id: item.id.toString()}})) ?? [];
+    const topRatedIds = topRatedShows?.data?.results?.map(item => ({params: {id: item.id.toString()}})) ?? [];
+    return {
+        paths: [...popularIds, ...topRatedIds],
+        fallback: true,
     }
 }
 
@@ -55,6 +70,8 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
     const base_poster_path = 'https://image.tmdb.org/t/p/w342';
     const base_profile_path = 'https://image.tmdb.org/t/p/w138_and_h175_face'
 
+    const router = useRouter();
+
     const CastList = () => {
         return (<div style={{marginTop: '20px'}}>
             <Typography variant={'h4'} className={classes.castTitle}>Cast</Typography>
@@ -74,35 +91,64 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
             </div>
         </div>)
     }
+    const MainPage = () => {
+        return (
+            <Container style={{marginTop: '20px', paddingBottom: '40px'}}>
+                <div style={{display: 'flex', alignItems: 'center'}} className={classes.infoContainer}>
+                    <img src={base_poster_path + showDetails.poster_path} className={classes.posterImage}/>
+                    <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
+                        <Typography variant={'h3'} as={'p'}>{showDetails.name}{showDetails.first_air_date ? ' (' + (new Date(showDetails.first_air_date)).getFullYear().toString() + ')' : ''}</Typography>
+                        <div style={{overflow: 'auto', marginTop: '5px'}}>
+                            {
+                                showDetails.genres.map(item => <Chip label={item.name} className={classes.chips} color={'primary'}/>)
+                            }
+                        </div>
+                        <Typography variant={'subtitle1'}
+                                    style={{fontStyle: 'italic', marginTop: '10px'}}>{showDetails.tagline}</Typography>
+                        <Typography variant={'h6'} style={{marginTop: '10px'}}>Overview</Typography>
+                        <Typography variant={'body1'}>{showDetails.overview}</Typography>
 
-    return (
-        <Container style={{marginTop: '20px', paddingBottom: '40px'}}>
-            <div style={{display: 'flex', alignItems: 'center'}} className={classes.infoContainer}>
-                <img src={base_poster_path + showDetails.poster_path} className={classes.posterImage}/>
-                <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
-                    <Typography variant={'h3'} as={'p'}>{showDetails.name}{showDetails.first_air_date ? ' (' + (new Date(showDetails.first_air_date)).getFullYear().toString() + ')' : ''}</Typography>
-                    <div style={{overflow: 'auto'}}>
-                        {
-                            showDetails.genres.map(item => <Chip label={item.name} className={classes.chips} color={'primary'}/>)
-                        }
+                        <ProviderList providers={streamLocations?.flatrate} title={"Stream"}/>
+                        <ProviderList providers={streamLocations?.buy} title={'Buy'}/>
+
+                        <Typography variant={'body1'} style={{
+                            fontWeight: 'bold',
+                            marginTop: '20px'
+                        }}>{showDetails?.created_by[0]?.name ?? ''}</Typography>
+                        {showDetails.created_by ? <Typography variant={'body1'}>Creator</Typography> : null}
                     </div>
-                    <Typography variant={'subtitle1'}
-                                style={{fontStyle: 'italic', marginTop: '10px'}}>{showDetails.tagline}</Typography>
-                    <Typography variant={'h6'} style={{marginTop: '10px'}}>Overview</Typography>
-                    <Typography variant={'body1'}>{showDetails.overview}</Typography>
-
-                    <ProviderList providers={streamLocations?.flatrate} title={"Stream"}/>
-                    <ProviderList providers={streamLocations?.buy} title={'Buy'}/>
-
-                    <Typography variant={'body1'} style={{
-                        fontWeight: 'bold',
-                        marginTop: '20px'
-                    }}>{showDetails?.created_by[0]?.name ?? ''}</Typography>
-                    {showDetails.created_by ? <Typography variant={'body1'}>Creator</Typography> : null}
                 </div>
-            </div>
-            <CastList/>
-            <PosterList shows={similarShows.results ?? []} title={'Similar Shows'}/>
-        </Container>
-    );
+                <CastList/>
+                <PosterList shows={similarShows.results ?? []} title={'Similar Shows'}/>
+            </Container>
+        )
+    }
+    const SkeletonPage = () => {
+        return (
+            <Container style={{marginTop: '20px', paddingBottom: '40px'}}>
+                <div style={{display: 'flex', alignItems: 'center'}} className={classes.infoContainer}>
+                    <Skeleton variant={'rect'} width={345} height={513}/>
+                    <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
+                        <Skeleton variant={'text'} width={500} height={60}/>
+                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                            {
+                                [1, 2, 3].map(item => <Skeleton variant={'rect'} width={70} height={32} style={{marginRight: '10px', borderRadius: '10px'}}/>)
+                            }
+                        </div>
+                        <Skeleton variant={'text'} width={400} height={28} style={{marginTop: '10px'}}/>
+                        <Skeleton variant={'text'} width={100} height={32} style={{marginTop: '10px'}}/>
+                        <Skeleton variant={'text'} width={500} height={125} style={{marginTop: '-20px'}}/>
+                        <Skeleton variant={'text'} width={100} height={32} style={{marginTop: '10px'}}/>
+                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                            {
+                                [1, 2, 3].map(item => <Skeleton variant={'rect'} width={60} height={60} style={{marginRight: '10px', borderRadius: '10px'}}/>)
+                            }
+                        </div>
+                    </div>
+                </div>
+            </Container>
+        )
+    }
+
+    return router.isFallback ? <SkeletonPage/> : <MainPage/>
 }

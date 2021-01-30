@@ -27,7 +27,7 @@ export default function NavBar(){
                         </Typography>
                     </ButtonBase>
                     <div className={classes.title}></div>
-                    <Button color="inherit">My Favorites</Button>
+                    <Button color="inherit" as={Link} href={'/favorites'}>My Favorites</Button>
                 </Toolbar>
             </AppBar>
         </div>
