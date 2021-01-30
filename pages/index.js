@@ -29,7 +29,8 @@ export default function Home(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
         <Container className={classes.container}>
-            <PosterList title={"Popular Shows"} shows={popularShows}/>
+            <PosterList title={"Popular Shows"} shows={popularShows} />
+            <PosterList title={'Top Rated Shows'} shows={topRatedShows} />
         </Container>
     </div>
   )
