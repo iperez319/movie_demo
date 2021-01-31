@@ -7,6 +7,7 @@ import PosterList from "../components/PosterList";
 import ProviderList from "../components/ProviderList";
 
 export async function getStaticProps(context){
+
     const {id} = context.params;
     const base = 'https://api.themoviedb.org/3';
     const showDetailsPromise = axios.get(base + `/tv/${id}`, {params: {api_key: process.env.API_KEY}});
@@ -71,7 +72,7 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
     const base_profile_path = 'https://image.tmdb.org/t/p/w138_and_h175_face'
 
     const router = useRouter();
-    console.log(showDetails)
+
     const CastList = () => {
         return (<div style={{marginTop: '20px'}}>
             <Typography variant={'h4'} className={classes.castTitle}>Cast</Typography>
