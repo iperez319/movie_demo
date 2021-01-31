@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function PosterList({title, shows}) {
     const classes = useStyles();
-    return (
+    return shows.length > 0 ? (
         <div style={{marginTop: '20px'}}>
             <Typography variant={'h4'} className={classes.title}>{title}</Typography>
             <div className={classes.posterList}>
@@ -32,5 +32,5 @@ export default function PosterList({title, shows}) {
                 }
             </div>
         </div>
-    )
+    ) : null
 }

@@ -73,8 +73,10 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
 
     const router = useRouter();
 
+    console.log(cast)
+
     const CastList = () => {
-        return (<div style={{marginTop: '20px'}}>
+        return cast.length > 0 ? (<div style={{marginTop: '20px'}}>
             <Typography variant={'h4'} className={classes.castTitle}>Cast</Typography>
             <div style={{display: 'flex', overflowY: 'auto', marginTop: '10px'}}>
                 {
@@ -90,7 +92,7 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
                     ))
                 }
             </div>
-        </div>)
+        </div>) : null;
     }
     const Tags = () => {
         return (
@@ -120,7 +122,7 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
                         <Typography variant={'body1'} style={{fontWeight: 'bold', marginTop: '20px'}}>
                             {showDetails?.created_by[0]?.name ?? ''}
                         </Typography>
-                        {showDetails.created_by !== [] ? <Typography variant={'body1'}>Creator</Typography> : null}
+                        {showDetails.created_by.length !== 0 ? <Typography variant={'body1'}>Creator</Typography> : null}
                     </div>
                 </div>
                 <CastList/>
