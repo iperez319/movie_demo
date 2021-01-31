@@ -83,6 +83,11 @@ export default function NavBar(){
         if(query !== "") fetchResults();
     }, [query])
 
+    const clearSearch = () => {
+        setQuery('');
+        setQueryText('');
+    }
+
     const generateSearchList = () => {
 
         if(queryResults.length === 0){
@@ -95,7 +100,7 @@ export default function NavBar(){
             return (queryResults.map((item) =>
                 item.poster_path
                     ? <Link href={`/${item.id}`}>
-                        <ListItem button>
+                        <ListItem button onClick={() => clearSearch()}>
                             <ListItemAvatar>
                                 <img src={image_path + `${item.poster_path}`} alt={item.name} style={{height: '50px', borderRadius: '2px'}}/>
                             </ListItemAvatar>
@@ -121,9 +126,7 @@ export default function NavBar(){
                         </div>
                         <div style={{width: 'max-content', position: 'relative'}} onBlur={(e) => {
                             if (!e.currentTarget.contains(e.relatedTarget)) {
-                                // Not triggered when swapping focus between children
-                                setQuery('')
-                                setQueryText('')
+                                clearSearch();
                             }
                         }}>
                             <InputBase
