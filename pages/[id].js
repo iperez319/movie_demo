@@ -25,7 +25,7 @@ export async function getStaticProps(context){
             similarShows: similarShows.data,
             streamLocations: streamLocations?.data?.results?.US ?? {},
         },
-        revalidate: 60,
+        revalidate: 450,
     }
 }
 
@@ -71,14 +71,14 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
     const base_profile_path = 'https://image.tmdb.org/t/p/w138_and_h175_face'
 
     const router = useRouter();
-
+    console.log(showDetails)
     const CastList = () => {
         return (<div style={{marginTop: '20px'}}>
             <Typography variant={'h4'} className={classes.castTitle}>Cast</Typography>
             <div style={{display: 'flex', overflowY: 'auto', marginTop: '10px'}}>
                 {
                     cast.map(item => (
-                        <Paper style={{width: 'min-content', marginRight: '30px'}}>
+                        <Paper style={{width: 'min-content', marginRight: '30px'}} key={`cast-${item.id}`}>
                             <img src={base_profile_path + item.profile_path} style={{borderTopLeftRadius: '4px', borderTopRightRadius: '4px'}}/>
                             <div style={{padding: '10px'}}>
                                 <Typography variant={'body1'}
@@ -91,6 +91,15 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
             </div>
         </div>)
     }
+    const Tags = () => {
+        return (
+            <div style={{overflow: 'auto', marginTop: '5px'}}>
+                {
+                    showDetails.genres.map(item => <Chip label={item.name} className={classes.chips} color={'primary'} key={`tag-${item.name}`}/>)
+                }
+            </div>
+        )
+    }
     const MainPage = () => {
         return (
             <Container style={{marginTop: '20px', paddingBottom: '40px'}}>
@@ -98,11 +107,7 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
                     <img src={base_poster_path + showDetails.poster_path} className={classes.posterImage}/>
                     <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
                         <Typography variant={'h3'} as={'p'}>{showDetails.name}{showDetails.first_air_date ? ' (' + (new Date(showDetails.first_air_date)).getFullYear().toString() + ')' : ''}</Typography>
-                        <div style={{overflow: 'auto', marginTop: '5px'}}>
-                            {
-                                showDetails.genres.map(item => <Chip label={item.name} className={classes.chips} color={'primary'}/>)
-                            }
-                        </div>
+                        <Tags/>
                         <Typography variant={'subtitle1'}
                                     style={{fontStyle: 'italic', marginTop: '10px'}}>{showDetails.tagline}</Typography>
                         <Typography variant={'h6'} style={{marginTop: '10px'}}>Overview</Typography>
@@ -111,11 +116,10 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
                         <ProviderList providers={streamLocations?.flatrate} title={"Stream"}/>
                         <ProviderList providers={streamLocations?.buy} title={'Buy'}/>
 
-                        <Typography variant={'body1'} style={{
-                            fontWeight: 'bold',
-                            marginTop: '20px'
-                        }}>{showDetails?.created_by[0]?.name ?? ''}</Typography>
-                        {showDetails.created_by ? <Typography variant={'body1'}>Creator</Typography> : null}
+                        <Typography variant={'body1'} style={{fontWeight: 'bold', marginTop: '20px'}}>
+                            {showDetails?.created_by[0]?.name ?? ''}
+                        </Typography>
+                        {showDetails.created_by !== [] ? <Typography variant={'body1'}>Creator</Typography> : null}
                     </div>
                 </div>
                 <CastList/>

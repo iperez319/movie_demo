@@ -9,7 +9,7 @@ export default function ProviderList({providers, title}){
                 <div style={{overflowX: 'auto', marginTop: '5px'}}>
                     {
                         providers?.map(item => {
-                            return <img src={base_logo_path + item.logo_path} style={{borderRadius: '5px', marginRight: '10px'}}/>
+                            return <img src={base_logo_path + item.logo_path} style={{borderRadius: '5px', marginRight: '10px'}} key={`provider-${item.provider_id}`}/>
                         })
                     }
                 </div>

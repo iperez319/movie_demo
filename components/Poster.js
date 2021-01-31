@@ -60,7 +60,7 @@ export default function Poster({show}){
 
     return (
         <ButtonBase as={Link} href={`/${show.id}`} className={classes.buttonBaseContainer}>
-            <img src={image_path + show.poster_path} className={classes.posterImage}/>
+            <img src={image_path + show.poster_path} className={classes.posterImage} alt={show.name}/>
             <IconButton style={{color: isFavorite ? 'red' : ''}} className={classes.favoriteButton} onClick={handleClick}><Favorite/></IconButton>
             <div className={classes.ratingsContainer}>{show.vote_average ?? 0.0}</div>
         </ButtonBase>
