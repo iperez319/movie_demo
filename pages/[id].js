@@ -83,7 +83,7 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
                     cast.map(item => (
                         <Paper style={{width: 'min-content', marginRight: '30px'}} key={`cast-${item.id}`}>
                             <img src={base_profile_path + item.profile_path} style={{borderTopLeftRadius: '4px', borderTopRightRadius: '4px'}}/>
-                            <div style={{padding: '10px'}}>
+                            <div style={{padding: '10px', maxHeight: '150px', overflow: 'auto'}}>
                                 <Typography variant={'body1'}
                                             style={{fontWeight: 'bold'}}>{item.name}</Typography>
                                 <Typography variant={'body1'}>{item.character}</Typography>
