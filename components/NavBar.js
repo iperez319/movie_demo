@@ -117,7 +117,7 @@ export default function NavBar(){
                 <Toolbar>
                     <ButtonBase as={Link} href={"/"} style={{padding: '10px'}}>
                         <Typography variant="h6">
-                        TV Show Demo
+                        Demo
                         </Typography>
                     </ButtonBase>
                     <div className={classes.search}>
@@ -156,7 +156,7 @@ export default function NavBar(){
                         </div>
                     </div>
                     <div className={classes.title}></div>
-                    <Button color="inherit" as={Link} href={'/favorites'}>My Favorites</Button>
+                    <Button color="inherit" as={Link} href={'/favorites'}>Favorites</Button>
                 </Toolbar>
             </AppBar>
         </div>

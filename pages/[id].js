@@ -1,10 +1,11 @@
 import React from 'react';
 import {useRouter} from 'next/router';
 import axios from "axios";
-import {Chip, Container, makeStyles, Paper, Typography} from "@material-ui/core";
+import {Chip, Container, makeStyles, Paper, Typography, Accordion, AccordionSummary, AccordionDetails} from "@material-ui/core";
 import {Skeleton} from "@material-ui/lab"
 import PosterList from "../components/PosterList";
 import ProviderList from "../components/ProviderList";
+import {ExpandMore} from "@material-ui/icons";
 
 export async function getStaticProps(context){
 
@@ -59,11 +60,15 @@ const useStyles = makeStyles(theme => ({
             flexDirection: 'column',
         }
     },
-    castTitle: {
+    sectionTitle: {
         [theme.breakpoints.down('sm')]: {
             fontSize: '27px',
         }
-    }
+    },
+    heading: {
+        fontSize: theme.typography.pxToRem(15),
+        fontWeight: theme.typography.fontWeightRegular,
+    },
 }))
 
 export default function ShowDetail({showDetails, cast, similarShows, streamLocations}){
@@ -73,11 +78,9 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
 
     const router = useRouter();
 
-    console.log(cast)
-
     const CastList = () => {
         return cast.length > 0 ? (<div style={{marginTop: '20px'}}>
-            <Typography variant={'h4'} className={classes.castTitle}>Cast</Typography>
+            <Typography variant={'h4'} className={classes.sectionTitle}>Cast</Typography>
             <div style={{display: 'flex', overflowY: 'auto', marginTop: '10px'}}>
                 {
                     cast.map(item => (
@@ -103,6 +106,44 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
             </div>
         )
     }
+    const Creator = () => {
+        return (
+            showDetails.created_by.length > 0 ?
+            <>
+                <Typography variant={'body1'} style={{fontWeight: 'bold', marginTop: '20px'}}>
+                    {showDetails?.created_by[0]?.name}
+                </Typography>
+                <Typography variant={'body1'}>Creator</Typography>
+            </> : null
+        )
+    }
+    const SeasonDetails = () => {
+        return ( showDetails.seasons ?
+            <div style={{marginTop: '20px'}}>
+                <Typography variant={'h4'} className={classes.sectionTitle}>Seasons</Typography>
+                <div style={{marginTop: '10px'}}>
+                    {
+                        showDetails.seasons.map(season =>
+                                <Accordion disabled={season.overview === ""}>
+                                    <AccordionSummary expandIcon={<ExpandMore/>}>
+                                        <Typography className={classes.heading}>{season.name} {season.air_date ? '(' + (new Date(season.air_date)).toLocaleDateString() + ')' : null}</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <div style={{display: 'flex', alignItems: 'center'}}>
+                                            <img src={base_poster_path + season.poster_path} style={{height: '150px', borderRadius: '5px'}}/>
+                                            <Typography variant={'body1'} style={{marginLeft: '10px'}}>
+                                                {season.overview}
+                                            </Typography>
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
+                        )
+                    }
+                </div>
+            </div> : null
+        )
+    };
+
     const MainPage = () => {
         return (
             <Container style={{marginTop: '20px', paddingBottom: '40px'}}>
@@ -118,13 +159,10 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
 
                         <ProviderList providers={streamLocations?.flatrate} title={"Stream"}/>
                         <ProviderList providers={streamLocations?.buy} title={'Buy'}/>
-
-                        <Typography variant={'body1'} style={{fontWeight: 'bold', marginTop: '20px'}}>
-                            {showDetails?.created_by[0]?.name ?? ''}
-                        </Typography>
-                        {showDetails.created_by.length !== 0 ? <Typography variant={'body1'}>Creator</Typography> : null}
+                        <Creator/>
                     </div>
                 </div>
+                <SeasonDetails/>
                 <CastList/>
                 <PosterList shows={similarShows.results ?? []} title={'Similar Shows'}/>
             </Container>

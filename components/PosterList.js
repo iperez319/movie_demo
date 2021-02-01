@@ -28,7 +28,7 @@ export default function PosterList({title, shows}) {
             <Typography variant={'h4'} className={classes.title}>{title}</Typography>
             <div className={classes.posterList}>
                 {
-                    shows.map((item) => <Poster show={item} key={`poster-${item.id}`}/>)
+                    shows.map((item) => item.poster_path ? <Poster show={item} key={`poster-${item.id}`}/> : null)
                 }
             </div>
         </div>
