@@ -9,7 +9,7 @@ export default function Favorites(){
         setShows(JSON.parse(data))
     }, [])
     return (
-        <div style={{display: 'flex', justifyContent: 'center', padding: '40px 40px'}}>
+        <div style={{display: 'flex', padding: '40px 40px'}}>
             <Head>
                 <title>My Favorites</title>
             </Head>
