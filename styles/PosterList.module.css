@@ -1,9 +1,0 @@
-.posterList {
-    display: flex;
-    overflow-y: auto;
-    margin-top: 20px;
-}
-
-.container {
-    padding: 10px;
-}
