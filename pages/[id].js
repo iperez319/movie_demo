@@ -35,11 +35,15 @@ export async function getStaticPaths(){
     const base = 'https://api.themoviedb.org/3';
     const popularPromise = axios.get(base + "/tv/popular", {params: {api_key: process.env.API_KEY}})
     const topRatedPromise = axios.get(base + "/tv/top_rated", {params: {api_key: process.env.API_KEY}})
-    const [popularShows, topRatedShows] = await Promise.all([popularPromise, topRatedPromise]);
+    const trendingPromise = axios.get(base + "/trending/tv/day", {params: {api_key: process.env.API_KEY}})
+
+    const [popularShows, topRatedShows, trendingShows] = await Promise.all([popularPromise, topRatedPromise, trendingPromise]);
     const popularIds = popularShows?.data?.results?.map(item => ({params: {id: item.id.toString()}})) ?? [];
     const topRatedIds = topRatedShows?.data?.results?.map(item => ({params: {id: item.id.toString()}})) ?? [];
+    const trendingIds = trendingShows?.data?.results?.map(item => ({params: {id: item.id.toString()}})) ?? [];
+
     return {
-        paths: [...popularIds, ...topRatedIds],
+        paths: [...popularIds, ...topRatedIds, ...trendingIds],
         fallback: true,
     }
 }

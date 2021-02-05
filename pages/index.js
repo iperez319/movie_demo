@@ -21,7 +21,6 @@ export async function getStaticProps(context){
 }
 
 export default function Home(props) {
-    const image_path = 'https://image.tmdb.org/t/p/w220_and_h330_face/'
     let popularShows = props?.popularShows?.results ?? [];
     let topRatedShows = props?.topRatedShows?.results ?? [];
     let trendingShows = props?.trendingShows?.results ?? [];
