@@ -1,11 +1,21 @@
 import React from 'react';
 import {useRouter} from 'next/router';
 import axios from "axios";
-import {Chip, Container, makeStyles, Paper, Typography, Accordion, AccordionSummary, AccordionDetails} from "@material-ui/core";
+import {
+    Chip,
+    Container,
+    makeStyles,
+    Paper,
+    Typography,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    ButtonBase, Button, Divider
+} from "@material-ui/core";
 import {Skeleton} from "@material-ui/lab"
 import PosterList from "../components/PosterList";
 import ProviderList from "../components/ProviderList";
-import {ExpandMore} from "@material-ui/icons";
+import {ExpandMore, Image} from "@material-ui/icons";
 
 export async function getStaticProps(context){
 
@@ -79,6 +89,7 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
     const classes = useStyles();
     const base_poster_path = 'https://image.tmdb.org/t/p/w342';
     const base_profile_path = 'https://image.tmdb.org/t/p/w138_and_h175_face'
+    const base_season_poster_path = 'https://image.tmdb.org/t/p/w130_and_h195_bestv2'
 
     const router = useRouter();
 
@@ -121,32 +132,68 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
             </> : null
         )
     }
-    const SeasonDetails = () => {
-        return ( showDetails.seasons ?
-            <div style={{marginTop: '20px'}}>
-                <Typography variant={'h4'} className={classes.sectionTitle}>Seasons</Typography>
-                <div style={{marginTop: '10px'}}>
+    const SeasonPoster = ({season}) => {
+        return (
+            season.poster_path
+                ? <img src={base_season_poster_path + season.poster_path} style={{borderRadius: '4px 0px 0px 4px'}}/>
+                : <div style={{width: '130px', height: '195px', backgroundColor: '#646464', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '4px 0px 0px 4px'}}>
+                    <Image style={{color: '#dbdbdb', fontSize: '45px'}}/>
+                  </div>
+        )
+    }
+    const SeasonPreview = () => {
+        return (
+                <div style={{marginTop: '20px'}}>
+                    <Typography variant={'h4'} className={classes.sectionTitle}>Seasons</Typography>
                     {
-                        showDetails.seasons.map(season =>
-                                <Accordion disabled={season.overview === ""}>
-                                    <AccordionSummary expandIcon={<ExpandMore/>}>
-                                        <Typography className={classes.heading}>{season.name} {season.air_date ? '(' + (new Date(season.air_date)).toLocaleDateString() + ')' : null}</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <div style={{display: 'flex', alignItems: 'center'}}>
-                                            <img src={base_poster_path + season.poster_path} style={{height: '150px', borderRadius: '5px'}}/>
-                                            <Typography variant={'body1'} style={{marginLeft: '10px'}}>
-                                                {season.overview}
-                                            </Typography>
+                        showDetails.seasons.map(season => {
+                            const air_date = new Date(season.air_date)
+                            return ( season.season_number !== 0 ?
+                                <Paper style={{width: '100%', position: "relative", marginBottom: '10px', display: 'flex', height: '195px'}}>
+                                    <SeasonPoster season={season}/>
+                                    <div style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
+                                        <span style={{fontSize: '25px', fontWeight: 'bold', marginBottom: '-5px'}}>{season.name}</span>
+                                        <div style={{marginBottom: '5px', display: 'flex'}}>
+                                            <span style={{fontSize: '17px', fontWeight: '500'}}>{season.episode_count} Episodes</span>
+                                            <Divider orientation='vertical' style={{margin: '0px 5px'}}/>
+                                            <span style={{fontSize: '17px', fontWeight: '500'}}>{air_date.getFullYear()}</span>
                                         </div>
-                                    </AccordionDetails>
-                                </Accordion>
-                        )
+                                        <Typography variant={'body1'} style={{display: '-webkit-box', WebkitLineClamp : '4', WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '96px'}}>{season.overview ? season.overview : `Season ${season.season_number} of ${showDetails.name} aired on ${air_date.toLocaleDateString()}` }</Typography>
+                                    </div>
+                                </Paper> : null
+                            )
+                        })
                     }
                 </div>
-            </div> : null
-        )
-    };
+    )
+    }
+
+    // const SeasonDetails = () => {
+    //     return ( showDetails.seasons ?
+    //         <div style={{marginTop: '20px'}}>
+    //             <Typography variant={'h4'} className={classes.sectionTitle}>Seasons</Typography>
+    //             <div style={{marginTop: '10px'}}>
+    //                 {
+    //                     showDetails.seasons.map(season =>
+    //                             <Accordion disabled={season.overview === ""}>
+    //                                 <AccordionSummary expandIcon={<ExpandMore/>}>
+    //                                     <Typography className={classes.heading}>{season.name} {season.air_date ? '(' + (new Date(season.air_date)).toLocaleDateString() + ')' : null}</Typography>
+    //                                 </AccordionSummary>
+    //                                 <AccordionDetails>
+    //                                     <div style={{display: 'flex', alignItems: 'center'}}>
+    //                                         <img src={base_poster_path + season.poster_path} style={{height: '150px', borderRadius: '5px'}}/>
+    //                                         <Typography variant={'body1'} style={{marginLeft: '10px'}}>
+    //                                             {season.overview}
+    //                                         </Typography>
+    //                                     </div>
+    //                                 </AccordionDetails>
+    //                             </Accordion>
+    //                     )
+    //                 }
+    //             </div>
+    //         </div> : null
+    //     )
+    // };
 
     const MainPage = () => {
         return (
@@ -166,7 +213,7 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
                         <Creator/>
                     </div>
                 </div>
-                <SeasonDetails/>
+                <SeasonPreview/>
                 <CastList/>
                 <PosterList shows={similarShows.results ?? []} title={'Similar Shows'}/>
             </Container>

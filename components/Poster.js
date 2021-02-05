@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Link from "next/link";
-import {ButtonBase, IconButton, makeStyles} from "@material-ui/core";
+import {ButtonBase, IconButton, makeStyles, Tooltip} from "@material-ui/core";
 import {Favorite} from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
@@ -61,7 +61,9 @@ export default function Poster({show}){
     return (
         <ButtonBase as={Link} href={`/${show.id}`} className={classes.buttonBaseContainer}>
             <img src={image_path + show.poster_path} className={classes.posterImage} alt={show.name}/>
-            <IconButton style={{color: isFavorite ? 'red' : ''}} className={classes.favoriteButton} onClick={handleClick}><Favorite/></IconButton>
+            <Tooltip title={'Add to Favorites'} placement={'top'}>
+                <IconButton style={{color: isFavorite ? 'red' : ''}} className={classes.favoriteButton} onClick={handleClick}><Favorite/></IconButton>
+            </Tooltip>
             <div className={classes.ratingsContainer}>{show.vote_average ?? 0.0}</div>
         </ButtonBase>
     )
