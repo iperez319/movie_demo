@@ -89,6 +89,8 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
     const base_profile_path = 'https://image.tmdb.org/t/p/w138_and_h175_face'
     const base_season_poster_path = 'https://image.tmdb.org/t/p/w130_and_h195_bestv2'
 
+    console.log(showDetails)
+
     const router = useRouter();
 
     const CastList = () => {
@@ -134,7 +136,7 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
         return (
             season.poster_path
                 ? <img src={base_season_poster_path + season.poster_path} style={{borderRadius: '4px 0px 0px 4px'}}/>
-                : <div style={{width: '130px', height: '195px', backgroundColor: '#646464', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '4px 0px 0px 4px'}}>
+                : <div style={{width: '130px', height: '195px', backgroundColor: '#646464', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '4px 0px 0px 4px', flexShrink: 0}}>
                     <Image style={{color: '#dbdbdb', fontSize: '45px'}}/>
                   </div>
         )
