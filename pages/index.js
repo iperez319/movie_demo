@@ -1,6 +1,5 @@
 import Head from 'next/head'
-import {Button, ButtonBase, Container, Typography} from "@material-ui/core";
-import Image from 'next/image';
+import {Container} from "@material-ui/core";
 import axios from 'axios';
 import PosterList from "../components/PosterList";
 
@@ -27,7 +26,7 @@ export default function Home(props) {
   return (
     <div>
       <Head>
-        <title>Create Next App</title>
+        <title>TV Demo</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
         <Container style={{padding: '10px'}}>

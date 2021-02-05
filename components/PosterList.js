@@ -1,7 +1,5 @@
 import React from 'react';
-import {ButtonBase, Container, IconButton, makeStyles, Typography} from "@material-ui/core";
-import Link from 'next/link';
-import {Favorite} from "@material-ui/icons";
+import {makeStyles, Typography} from "@material-ui/core";
 import Poster from "./Poster";
 
 const useStyles = makeStyles(theme => ({

@@ -3,15 +3,13 @@ import {
     AppBar,
     Button,
     ButtonBase,
-    IconButton,
     InputBase,
     makeStyles,
     Toolbar,
     Typography,
     fade,
-    Paper, List, ListItem, ListItemAvatar, Avatar, ListItemText
+    Paper, List, ListItem, ListItemAvatar, ListItemText
 } from "@material-ui/core";
-import MenuIcon from '@material-ui/icons/Menu';
 import Link from "next/link";
 import {Search} from "@material-ui/icons";
 import {useDebounce} from '@react-hook/debounce';

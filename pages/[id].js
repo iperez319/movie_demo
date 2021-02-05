@@ -7,15 +7,13 @@ import {
     makeStyles,
     Paper,
     Typography,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    ButtonBase, Button, Divider
+    Divider
 } from "@material-ui/core";
 import {Skeleton} from "@material-ui/lab"
 import PosterList from "../components/PosterList";
 import ProviderList from "../components/ProviderList";
-import {ExpandMore, Image} from "@material-ui/icons";
+import {Image} from "@material-ui/icons";
+import Head from "next/head";
 
 export async function getStaticProps(context){
 
@@ -168,36 +166,12 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
     )
     }
 
-    // const SeasonDetails = () => {
-    //     return ( showDetails.seasons ?
-    //         <div style={{marginTop: '20px'}}>
-    //             <Typography variant={'h4'} className={classes.sectionTitle}>Seasons</Typography>
-    //             <div style={{marginTop: '10px'}}>
-    //                 {
-    //                     showDetails.seasons.map(season =>
-    //                             <Accordion disabled={season.overview === ""}>
-    //                                 <AccordionSummary expandIcon={<ExpandMore/>}>
-    //                                     <Typography className={classes.heading}>{season.name} {season.air_date ? '(' + (new Date(season.air_date)).toLocaleDateString() + ')' : null}</Typography>
-    //                                 </AccordionSummary>
-    //                                 <AccordionDetails>
-    //                                     <div style={{display: 'flex', alignItems: 'center'}}>
-    //                                         <img src={base_poster_path + season.poster_path} style={{height: '150px', borderRadius: '5px'}}/>
-    //                                         <Typography variant={'body1'} style={{marginLeft: '10px'}}>
-    //                                             {season.overview}
-    //                                         </Typography>
-    //                                     </div>
-    //                                 </AccordionDetails>
-    //                             </Accordion>
-    //                     )
-    //                 }
-    //             </div>
-    //         </div> : null
-    //     )
-    // };
-
     const MainPage = () => {
         return (
             <Container style={{marginTop: '20px', paddingBottom: '40px'}}>
+                <Head>
+                    <title>{showDetails.name}</title>
+                </Head>
                 <div style={{display: 'flex', alignItems: 'center'}} className={classes.infoContainer}>
                     <img src={base_poster_path + showDetails.poster_path} className={classes.posterImage}/>
                     <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>
@@ -222,6 +196,9 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
     const SkeletonPage = () => {
         return (
             <Container style={{marginTop: '20px', paddingBottom: '40px'}}>
+                <Head>
+                    <title>Loading...</title>
+                </Head>
                 <div style={{display: 'flex', alignItems: 'center'}} className={classes.infoContainer}>
                     <Skeleton variant={'rect'} width={345} height={513}/>
                     <div style={{display: 'flex', flexDirection: 'column', marginLeft: '20px'}}>

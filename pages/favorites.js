@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Container} from "@material-ui/core";
 import Poster from "../components/Poster";
+import Head from "next/head";
 
 export default function Favorites(){
     const [shows, setShows] = useState([]);
@@ -10,6 +10,9 @@ export default function Favorites(){
     }, [])
     return (
         <div style={{display: 'flex', justifyContent: 'center', padding: '40px 40px'}}>
+            <Head>
+                <title>My Favorites</title>
+            </Head>
             <div style={{display: 'flex', flexWrap: 'wrap', gap: '10px'}}>
                 {
                     shows.map(item => <Poster show={item} key={`poster-${item.id}`}/>)
