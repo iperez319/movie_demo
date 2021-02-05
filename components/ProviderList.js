@@ -1,5 +1,5 @@
 import React from 'react';
-import {Typography} from "@material-ui/core";
+import {Tooltip, Typography} from "@material-ui/core";
 
 export default function ProviderList({providers, title}){
     const base_logo_path = 'https://image.tmdb.org/t/p/w45'
@@ -9,7 +9,7 @@ export default function ProviderList({providers, title}){
                 <div style={{overflowX: 'auto', marginTop: '5px'}}>
                     {
                         providers?.map(item => {
-                            return <img src={base_logo_path + item.logo_path} style={{borderRadius: '5px', marginRight: '10px'}} key={`provider-${item.provider_id}`}/>
+                            return <Tooltip title={item.provider_name} placement={'top'}><img src={base_logo_path + item.logo_path} style={{borderRadius: '5px', marginRight: '10px'}} key={`provider-${item.provider_id}`}/></Tooltip>
                         })
                     }
                 </div>

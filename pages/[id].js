@@ -89,8 +89,6 @@ export default function ShowDetail({showDetails, cast, similarShows, streamLocat
     const base_profile_path = 'https://image.tmdb.org/t/p/w138_and_h175_face'
     const base_season_poster_path = 'https://image.tmdb.org/t/p/w130_and_h195_bestv2'
 
-    console.log(showDetails)
-
     const router = useRouter();
 
     const CastList = () => {
